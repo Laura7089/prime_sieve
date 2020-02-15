@@ -91,14 +91,39 @@ impl Sieve {
     /// Determine whether a number within the prime sieve's limits is trule prime or not
     ///
     /// Returns `Err()` if sieve is unpopulated or if `target > sieve.max()`.
-    pub fn lookup(&self, target: usize) -> Result<bool, &'static str> {
+    pub fn lookup(&self, target: usize) -> Result<bool, String> {
         if !self.filled {
-            Err("Sieve not populated!")
+            Err(String::from("Sieve not populated!"))
         } else if target > self.max {
-            Err("Target number out of this sieve's bounds")
+            Err(format!(
+                "{} is out of this sieve's bounds (max {})",
+                target, self.max
+            ))
         } else {
             Ok(self.sieve_table[target])
         }
+    }
+
+    /// Takes a vector of `usize`s and removes all the non-prime ones.
+    ///
+    /// Will return `Err()` if one of `target`'s elements is outside the bounds of this sieve
+    ///
+    /// ```
+    /// use prime_sieve::Sieve;
+    ///
+    /// let my_sieve = Sieve::new(100);
+    ///
+    /// // Returns [2,3]
+    /// my_sieve.filter(vec![1,2,3,4]);
+    /// ```
+    pub fn filter(&self, target: Vec<usize>) -> Result<Vec<usize>, String> {
+        let mut result: Vec<usize> = Vec::new();
+        for i in target.into_iter() {
+            if self.lookup(i)? {
+                result.push(i);
+            }
+        }
+        Ok(result)
     }
 }
 
@@ -118,6 +143,13 @@ mod tests {
     fn marks_correctly_med() {
         let test_case = Sieve::new(1000);
         assert!(!test_case.lookup(500).unwrap());
+    }
+
+    #[test]
+    fn test_correct_filtering() {
+        let test_sieve = Sieve::new(15);
+        let cases = vec![1, 2, 3, 4, 5, 6];
+        assert_eq!(vec![2, 3, 5], test_sieve.filter(cases).unwrap());
     }
 
     #[test]
