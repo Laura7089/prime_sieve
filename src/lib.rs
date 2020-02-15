@@ -53,7 +53,7 @@ impl Sieve {
         }
     }
 
-    /// Populate an unfilled sieve - note that the sieve must be mutable.
+    /// Populate an unfilled sieve - note that the sieve must be `mut`.
     ///
     /// Has no effect on already-filled sieves.
     ///
