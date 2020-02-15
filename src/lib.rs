@@ -59,9 +59,23 @@ impl Sieve {
         }
     }
 
-    /// Populate an unfilled sieve.
+    /// Populate an unfilled sieve - note that the sieve must be mutable.
     ///
     /// Has no effect on already-filled sieves.
+    ///
+    /// ```
+    /// use prime_sieve::Sieve;
+    ///
+    /// let mut my_sieve = Sieve::unfilled(100);
+    ///
+    /// // Returns Err()
+    /// my_sieve.lookup(10);
+    ///
+    /// my_sieve.fill();
+    ///
+    /// // Returns Ok(false)
+    /// my_sieve.lookup(10);
+    /// ```
     pub fn fill(&mut self) {
         if self.filled {
             return;
