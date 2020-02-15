@@ -8,9 +8,8 @@ pub struct Sieve {
 impl Sieve {
     /// Create a new prime sieve with the maximum value `max`, but *do not* populate it.
     /// ```
-    /// use prime_sieve::Sieve;
+    /// let unfilled_sieve = prime_sieve::Sieve::unfilled(10);
     ///
-    /// let unfilled_sieve = Sieve::unfilled(10);
     /// // Returns Err()
     /// unfilled_sieve.lookup(5);
     /// ```
@@ -24,9 +23,7 @@ impl Sieve {
 
     /// Create and populate a prime sieve with the maximum value `max`.
     /// ```
-    /// use prime_sieve::Sieve;
-    ///
-    /// let my_sieve = Sieve::new(10);
+    /// let my_sieve = prime_sieve::Sieve::new(10);
     /// ```
     pub fn new(max: usize) -> Sieve {
         let mut result = Sieve::unfilled(max);
@@ -37,11 +34,8 @@ impl Sieve {
     /// Get the max value of this sieve
     ///
     /// ```
-    /// use prime_sieve::Sieve;
-    ///
-    /// let my_sieve = Sieve::new(10);
-    /// // Returns 10
-    /// my_sieve.max();
+    /// let my_sieve = prime_sieve::Sieve::new(10);
+    /// assert_eq!(my_sieve.max(), 10);
     /// ```
     pub fn max(self) -> usize {
         return self.max;
@@ -64,17 +58,14 @@ impl Sieve {
     /// Has no effect on already-filled sieves.
     ///
     /// ```
-    /// use prime_sieve::Sieve;
-    ///
-    /// let mut my_sieve = Sieve::unfilled(100);
+    /// let mut my_sieve = prime_sieve::Sieve::unfilled(100);
     ///
     /// // Returns Err()
     /// my_sieve.lookup(10);
     ///
     /// my_sieve.fill();
     ///
-    /// // Returns Ok(false)
-    /// my_sieve.lookup(10);
+    /// assert_eq!(my_sieve.lookup(10).unwrap(), false);
     /// ```
     pub fn fill(&mut self) {
         if self.filled {
@@ -109,12 +100,10 @@ impl Sieve {
     /// Will return `Err()` if one of `target`'s elements is outside the bounds of this sieve
     ///
     /// ```
-    /// use prime_sieve::Sieve;
+    /// let my_sieve = prime_sieve::Sieve::new(100);
     ///
-    /// let my_sieve = Sieve::new(100);
-    ///
-    /// // Returns [2,3]
-    /// my_sieve.filter(vec![1,2,3,4]);
+    /// let filtered = my_sieve.filter(vec![1,2,3,4]).unwrap();
+    /// assert_eq!(filtered, vec![2,3]);
     /// ```
     pub fn filter(&self, target: Vec<usize>) -> Result<Vec<usize>, String> {
         let mut result: Vec<usize> = Vec::new();
