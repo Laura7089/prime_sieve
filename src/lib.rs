@@ -43,12 +43,12 @@ impl Sieve {
 
     // Warning: doesn't check if the target is out of bounds
     fn process_ahead(&mut self, target: u64) {
-        if !self.sieve_table[target] {
+        if !self.sieve_table[target as usize] {
             return;
         }
-        let mut cur_target: u64 = 2 * target;
+        let mut cur_target = 2 * target;
         while cur_target <= self.max {
-            self.sieve_table[cur_target] = false;
+            self.sieve_table[cur_target as usize] = false;
             cur_target += target;
         }
     }
@@ -91,7 +91,7 @@ impl Sieve {
                 target, self.max
             ))
         } else {
-            Ok(self.sieve_table[target])
+            Ok(self.sieve_table[target as usize])
         }
     }
 
