@@ -1,6 +1,6 @@
 #[derive(Debug)]
 pub struct Sieve {
-    max: usize,
+    max: u64,
     sieve_table: Vec<bool>,
     filled: bool,
 }
@@ -13,7 +13,7 @@ impl Sieve {
     /// // Returns Err()
     /// unfilled_sieve.lookup(5);
     /// ```
-    pub fn unfilled(max: usize) -> Sieve {
+    pub fn unfilled(max: u64) -> Sieve {
         Sieve {
             max,
             sieve_table: (0..=max).map(|_| true).collect(),
@@ -25,7 +25,7 @@ impl Sieve {
     /// ```
     /// let my_sieve = prime_sieve::Sieve::new(10);
     /// ```
-    pub fn new(max: usize) -> Sieve {
+    pub fn new(max: u64) -> Sieve {
         let mut result = Sieve::unfilled(max);
         result.fill();
         result
@@ -37,16 +37,16 @@ impl Sieve {
     /// let my_sieve = prime_sieve::Sieve::new(10);
     /// assert_eq!(my_sieve.max(), 10);
     /// ```
-    pub fn max(&self) -> usize {
+    pub fn max(&self) -> u64 {
         return self.max;
     }
 
     // Warning: doesn't check if the target is out of bounds
-    fn process_ahead(&mut self, target: usize) {
+    fn process_ahead(&mut self, target: u64) {
         if !self.sieve_table[target] {
             return;
         }
-        let mut cur_target: usize = 2 * target;
+        let mut cur_target: u64 = 2 * target;
         while cur_target <= self.max {
             self.sieve_table[cur_target] = false;
             cur_target += target;
@@ -73,7 +73,7 @@ impl Sieve {
         }
         self.sieve_table[0] = false;
         self.sieve_table[1] = false;
-        for i in 2..=((self.max as f64).sqrt() as usize) {
+        for i in 2..=((self.max as f64).sqrt() as u64) {
             self.process_ahead(i);
         }
         self.filled = true;
@@ -82,7 +82,7 @@ impl Sieve {
     /// Determine whether a number within the prime sieve's limits is trule prime or not
     ///
     /// Returns `Err()` if sieve is unpopulated or if `target > sieve.max()`.
-    pub fn lookup(&self, target: usize) -> Result<bool, String> {
+    pub fn lookup(&self, target: u64) -> Result<bool, String> {
         if !self.filled {
             Err(String::from("Sieve not populated!"))
         } else if target > self.max {
@@ -95,7 +95,7 @@ impl Sieve {
         }
     }
 
-    /// Takes a vector of `usize`s and removes all the non-prime ones.
+    /// Takes a vector of `u64`s and removes all the non-prime ones.
     ///
     /// Will return `Err()` if one of `target`'s elements is outside the bounds of this sieve
     ///
@@ -105,8 +105,8 @@ impl Sieve {
     /// let filtered = my_sieve.filter(vec![1,2,3,4]).unwrap();
     /// assert_eq!(filtered, vec![2,3]);
     /// ```
-    pub fn filter(&self, target: Vec<usize>) -> Result<Vec<usize>, String> {
-        let mut result: Vec<usize> = Vec::new();
+    pub fn filter(&self, target: Vec<u64>) -> Result<Vec<u64>, String> {
+        let mut result: Vec<u64> = Vec::new();
         for i in target.into_iter() {
             if self.lookup(i)? {
                 result.push(i);
