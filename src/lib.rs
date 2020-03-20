@@ -37,7 +37,7 @@ impl Sieve {
     /// let my_sieve = prime_sieve::Sieve::new(10);
     /// assert_eq!(my_sieve.max(), 10);
     /// ```
-    pub fn max(self) -> usize {
+    pub fn max(&self) -> usize {
         return self.max;
     }
 
